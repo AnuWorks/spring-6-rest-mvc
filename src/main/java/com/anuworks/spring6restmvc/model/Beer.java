@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Builder
@@ -18,7 +18,7 @@ public class Beer {
     private String upc;
     private BigDecimal price;
     private int quantityOnHand;
-    private LocalDate createdDate;
-    private LocalDate lastUpdatedDate;
+    private LocalDateTime createdDate;
+    private LocalDateTime lastUpdatedDate;
 
 }

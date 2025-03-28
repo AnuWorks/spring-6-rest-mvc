@@ -4,19 +4,30 @@ import com.anuworks.spring6restmvc.model.Beer;
 import com.anuworks.spring6restmvc.service.BeerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
-@Controller
+@RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/v1/beer")
 public class BeerController {
     private final BeerService beerService;
 
-    public Beer getBeerById(UUID id) {
-        log.debug("Get beer by id in controller: {}", id);
-        return beerService.getBeerById(id);
+
+
+    @RequestMapping(value = "/{beerId}", method = RequestMethod.GET)
+    public Beer getBeerById(@PathVariable("beerId") UUID beerId) {
+        log.debug("Get beer by id in controller: {}", beerId);
+        return beerService.getBeerById(beerId);
+    }
+
+    @RequestMapping(method = RequestMethod.GET)
+    public List<Beer> getAllBeers() {
+        log.debug("Get all beers");
+        return beerService.listBeers();
     }
 
 
