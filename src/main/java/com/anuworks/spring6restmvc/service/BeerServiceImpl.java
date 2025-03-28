@@ -4,6 +4,7 @@ import com.anuworks.spring6restmvc.model.Beer;
 import com.anuworks.spring6restmvc.model.BeerStyle;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -13,7 +14,7 @@ import java.util.*;
 @Service
 public class BeerServiceImpl implements BeerService {
 
-    private Map<UUID, Beer> beerMap;
+    private final Map<UUID, Beer> beerMap;
 
     public BeerServiceImpl() {
         this.beerMap = new HashMap<>();
@@ -102,6 +103,39 @@ public class BeerServiceImpl implements BeerService {
         existing.setLastUpdatedDate(LocalDateTime.now());
         beerMap.put(existing.getId(), existing);
 
+
+    }
+
+    @Override
+    public void deleteBeerByID(UUID beerId) {
+        log.debug("Delete beer by id in service: {}", beerId);
+        beerMap.remove(beerId);
+    }
+
+    @Override
+    public Beer patchBeerByID(UUID beerId, Beer beer) {
+        log.debug("Patch beer by id in service: {}", beerId);
+
+        Beer existing = beerMap.get(beerId);
+        // Check and update
+        if(StringUtils.hasText(beer.getBeerName())) {
+            existing.setBeerName(beer.getBeerName());
+        }
+        if(StringUtils.hasText(beer.getUpc())) {
+            existing.setUpc(beer.getUpc());
+        }
+        if (beer.getPrice() != null) {
+            existing.setPrice(beer.getPrice());
+        }
+        if(beer.getQuantityOnHand() != null) {
+            existing.setQuantityOnHand(beer.getQuantityOnHand());
+        }
+        if (beer.getBeerStyle() != null) {
+            existing.setBeerStyle(beer.getBeerStyle());
+        }
+        existing.setLastUpdatedDate(LocalDateTime.now());
+        beerMap.put(beerId, existing);
+        return existing;
 
     }
 }

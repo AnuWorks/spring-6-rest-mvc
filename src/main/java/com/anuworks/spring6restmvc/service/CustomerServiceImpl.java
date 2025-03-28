@@ -3,6 +3,7 @@ package com.anuworks.spring6restmvc.service;
 import com.anuworks.spring6restmvc.model.Customer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -78,6 +79,27 @@ public class CustomerServiceImpl implements CustomerService {
         existingCustomer.setCustomerName(customer.getCustomerName());
         existingCustomer.setLastModifiedDate(LocalDateTime.now());
         customerMap.put(customerId, existingCustomer);
+
+    }
+
+    @Override
+    public void deleteCustomerByID(UUID customerId) {
+        log.info("CustomerServiceImpl deleteCustomerByID...");
+        customerMap.remove(customerId);
+    }
+
+    @Override
+    public Customer patchCustomerById(UUID customerId, Customer customer) {
+        log.info("CustomerServiceImpl patchCustomerById...");
+        Customer existingCustomer = customerMap.get(customerId);
+
+        if(StringUtils.hasText(customer.getCustomerName())) {
+            existingCustomer.setCustomerName(customer.getCustomerName());
+        }
+        existingCustomer.setLastModifiedDate(LocalDateTime.now());
+        customerMap.put(customerId, existingCustomer);
+
+        return existingCustomer;
 
     }
 }
