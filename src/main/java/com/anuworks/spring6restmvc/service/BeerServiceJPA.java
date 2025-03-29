@@ -4,6 +4,7 @@ import com.anuworks.spring6restmvc.mappers.BeerMapper;
 import com.anuworks.spring6restmvc.model.BeerDTO;
 import com.anuworks.spring6restmvc.repo.BeerRepo;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ import java.util.UUID;
 @Service
 @Primary
 @RequiredArgsConstructor
+@Slf4j
 public class BeerServiceJPA implements BeerService {
 
     private final BeerRepo beerRepo;
@@ -24,6 +26,7 @@ public class BeerServiceJPA implements BeerService {
 
     @Override
     public List<BeerDTO> getListOfBeers() {
+        log.debug("Get list of beers from database");
         return beerRepo.findAll()
                 .stream()
                 .map(beerMapper::beerToBeerDTO)
