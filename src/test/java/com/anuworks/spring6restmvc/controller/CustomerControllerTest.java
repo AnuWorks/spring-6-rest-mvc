@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
@@ -37,6 +38,12 @@ class CustomerControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Captor
+    private ArgumentCaptor<Customer> customerArgumentCaptor;
+
+    @Captor
+    private ArgumentCaptor<UUID> uuidArgumentCaptor;
+
     private CustomerServiceImpl customerServiceImpl;
 
     @BeforeEach
@@ -46,13 +53,28 @@ class CustomerControllerTest {
 
 
     @Test
+    void testPatchCustomer() throws Exception {
+        Customer customer = customerServiceImpl.getListOfCustomers().getFirst();
+        customer.setCustomerName("This is for test patch");
+
+        mockMvc.perform(patch("/api/v1/customer/" + customer.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(customer))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+
+        verify(customerService).patchCustomerById(uuidArgumentCaptor.capture(), customerArgumentCaptor.capture());
+        assertThat(uuidArgumentCaptor.getValue()).isEqualTo(customer.getId());
+        assertThat(customerArgumentCaptor.getValue().getCustomerName()).isEqualTo(customer.getCustomerName());
+
+    }
+
+    @Test
     void testDeleteCustomer() throws Exception {
         Customer customer = customerServiceImpl.getListOfCustomers().getFirst();
 
         mockMvc.perform(delete("/api/v1/customer/" + customer.getId()))
                 .andExpect(status().isNoContent());
-
-        ArgumentCaptor<UUID> uuidArgumentCaptor = ArgumentCaptor.forClass(UUID.class);
 
         verify(customerService).deleteCustomerByID(uuidArgumentCaptor.capture());
 
