@@ -3,6 +3,8 @@ package com.anuworks.spring6restmvc.repo;
 import com.anuworks.spring6restmvc.entities.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface CustomerRepo extends JpaRepository<Customer, Long> {
+import java.util.UUID;
+
+public interface CustomerRepo extends JpaRepository<Customer, UUID> {
 
 }

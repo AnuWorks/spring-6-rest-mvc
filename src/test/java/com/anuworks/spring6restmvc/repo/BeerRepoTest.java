@@ -1,5 +1,6 @@
 package com.anuworks.spring6restmvc.repo;
 
+import com.anuworks.spring6restmvc.bootstrap.BootstrapData;
 import com.anuworks.spring6restmvc.entities.Beer;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,5 +24,6 @@ class BeerRepoTest {
         assertThat(beer).isNotNull();
         assertThat(beer.getId()).isNotNull();
     }
+
 
 }
