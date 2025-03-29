@@ -15,7 +15,6 @@ import java.util.UUID;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping()
 public class BeerController {
 
     private static final String BEER_PATH = "/api/v1/beer";
