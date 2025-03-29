@@ -29,6 +29,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(CustomerController.class)
 class CustomerControllerTest {
 
+    private static final String CUSTOMER_PATH = "/api/v1/customer";
+    private static final String CUSTOMER_PATH_ID = "/api/v1/customer/{customerId}";
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -57,7 +60,7 @@ class CustomerControllerTest {
         Customer customer = customerServiceImpl.getListOfCustomers().getFirst();
         customer.setCustomerName("This is for test patch");
 
-        mockMvc.perform(patch("/api/v1/customer/" + customer.getId())
+        mockMvc.perform(patch(CUSTOMER_PATH_ID, customer.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(customer))
                 .accept(MediaType.APPLICATION_JSON))
@@ -73,7 +76,7 @@ class CustomerControllerTest {
     void testDeleteCustomer() throws Exception {
         Customer customer = customerServiceImpl.getListOfCustomers().getFirst();
 
-        mockMvc.perform(delete("/api/v1/customer/" + customer.getId()))
+        mockMvc.perform(delete(CUSTOMER_PATH_ID, customer.getId()))
                 .andExpect(status().isNoContent());
 
         verify(customerService).deleteCustomerByID(uuidArgumentCaptor.capture());
@@ -86,7 +89,7 @@ class CustomerControllerTest {
     void testUpdateCustomer() throws Exception {
         Customer customer = customerServiceImpl.getListOfCustomers().getFirst();
 
-        mockMvc.perform(put("/api/v1/customer/" + customer.getId())
+        mockMvc.perform(put(CUSTOMER_PATH_ID, customer.getId())
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(customer)))
@@ -103,7 +106,7 @@ class CustomerControllerTest {
 
         given(customerService.createACustomer(any(Customer.class))).willReturn(newCustomer);
 
-        mockMvc.perform(post("/api/v1/customer")
+        mockMvc.perform(post(CUSTOMER_PATH)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(Customer.builder().customerName("Anudeep").build())))
                 .andExpect(status().isCreated())
@@ -119,7 +122,7 @@ class CustomerControllerTest {
 
         given(customerService.getCustomerById(testCustomer.getId())).willReturn(testCustomer);
 
-        mockMvc.perform(get("/api/v1/customer/" + testCustomer.getId()).accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get(CUSTOMER_PATH_ID, testCustomer.getId()).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id", is(testCustomer.getId().toString())));
@@ -132,7 +135,7 @@ class CustomerControllerTest {
 
         given(customerService.getListOfCustomers()).willReturn(testCustomers);
 
-        mockMvc.perform(get("/api/v1/customer").accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get(CUSTOMER_PATH).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.length()", is(3)));

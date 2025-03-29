@@ -12,27 +12,29 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-@RequestMapping("/api/v1/customer")
 @RequiredArgsConstructor
 @Slf4j
 @RestController
 public class CustomerController {
 
+    private static final String CUSTOMER_PATH = "/api/v1/customer";
+    private static final String CUSTOMER_PATH_ID = "/api/v1/customer/{customerId}";
+
     private final CustomerService customerService;
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping(CUSTOMER_PATH)
     public List<Customer> getListOfCustomer(){
         log.info("CustomerController getListOfCustomer...");
         return customerService.getListOfCustomers();
     }
 
-    @RequestMapping(value = "/{customerId}", method = RequestMethod.GET)
+    @GetMapping(CUSTOMER_PATH_ID)
     public Customer getCustomerById(@PathVariable("customerId") UUID customerId){
         log.info("CustomerController getCustomerById... {}", customerId);
         return customerService.getCustomerById(customerId);
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping(CUSTOMER_PATH)
     public ResponseEntity<Customer> createCustomer(@RequestBody Customer customer) {
         log.info("CustomerController createCustomer...");
         Customer savedCustomer = customerService.createACustomer(customer);
@@ -43,7 +45,7 @@ public class CustomerController {
         
     }
 
-    @PutMapping("/{customerId}")
+    @PutMapping(CUSTOMER_PATH_ID)
     public ResponseEntity<Customer> updateCustomer( @PathVariable UUID customerId, @RequestBody Customer customer) {
         log.info("CustomerController updateCustomer...");
 
@@ -53,7 +55,7 @@ public class CustomerController {
 
     }
 
-    @DeleteMapping("/{customerId}")
+    @DeleteMapping(CUSTOMER_PATH_ID)
     public ResponseEntity<Customer> deleteCustomer(@PathVariable("customerId") UUID customerId) {
         log.info("CustomerController deleteCustomer...");
 
@@ -62,7 +64,7 @@ public class CustomerController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PatchMapping("/{customerId}")
+    @PatchMapping(CUSTOMER_PATH_ID)
     public ResponseEntity<Customer> patchCustomerById(@PathVariable("customerId") UUID customerId, @RequestBody Customer customer) {
         log.info("CustomerController patchCustomerById...");
         Customer updatedCustomer = customerService.patchCustomerById(customerId, customer);
