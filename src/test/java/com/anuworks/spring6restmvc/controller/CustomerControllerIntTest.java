@@ -77,6 +77,8 @@ class CustomerControllerIntTest {
     }
 
     @Test
+    @Transactional
+    @Rollback
     void testUpdateCustomer() {
         Customer existingCustomer = customerRepo.findAll().get(0);
         existingCustomer.setCustomerName("updated customer");
