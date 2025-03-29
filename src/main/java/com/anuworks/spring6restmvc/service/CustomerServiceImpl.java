@@ -46,8 +46,8 @@ public class CustomerServiceImpl implements CustomerService {
 
 
     @Override
-    public List<Customer> listCustomers() {
-        log.info("CustomerServiceImpl listCustomers...");
+    public List<Customer> getListOfCustomers() {
+        log.info("CustomerServiceImpl getListOfCustomers...");
         return new ArrayList<>(customerMap.values());
     }
 
@@ -58,8 +58,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer addCustomer(Customer customer) {
-        log.info("CustomerServiceImpl addCustomer...");
+    public Customer createACustomer(Customer customer) {
+        log.info("CustomerServiceImpl createACustomer...");
         Customer savedCustomer = Customer.builder()
                 .id(UUID.randomUUID())
                 .version(1)

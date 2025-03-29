@@ -61,7 +61,7 @@ public class BeerServiceImpl implements BeerService {
     }
 
     @Override
-    public List<Beer> listBeers() {
+    public List<Beer> getListOfBeers() {
         return new ArrayList<>(beerMap.values());
     }
 
@@ -72,7 +72,7 @@ public class BeerServiceImpl implements BeerService {
     }
 
     @Override
-    public Beer saveNewBeer(Beer beer) {
+    public Beer createNewBeer(Beer beer) {
 
         Beer savedBeer = Beer.builder()
                 .id(UUID.randomUUID())

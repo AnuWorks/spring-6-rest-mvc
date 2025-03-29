@@ -23,7 +23,7 @@ public class CustomerController {
     @RequestMapping(method = RequestMethod.GET)
     public List<Customer> getListOfCustomer(){
         log.info("CustomerController getListOfCustomer...");
-        return customerService.listCustomers();
+        return customerService.getListOfCustomers();
     }
 
     @RequestMapping(value = "/{customerId}", method = RequestMethod.GET)
@@ -35,7 +35,7 @@ public class CustomerController {
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Customer> createCustomer(@RequestBody Customer customer) {
         log.info("CustomerController createCustomer...");
-        Customer savedCustomer = customerService.addCustomer(customer);
+        Customer savedCustomer = customerService.createACustomer(customer);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Location", savedCustomer.getId().toString());

@@ -30,13 +30,13 @@ public class BeerController {
     @RequestMapping(method = RequestMethod.GET)
     public List<Beer> getAllBeers() {
         log.debug("Get all beers");
-        return beerService.listBeers();
+        return beerService.getListOfBeers();
     }
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<Beer> handlePost(@RequestBody Beer beer){
         log.debug("Handle post beer: {}", beer);
-        Beer saveNewBeer = beerService.saveNewBeer(beer);
+        Beer saveNewBeer = beerService.createNewBeer(beer);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Location", "/api/v1/beer/" + saveNewBeer.getId().toString());
