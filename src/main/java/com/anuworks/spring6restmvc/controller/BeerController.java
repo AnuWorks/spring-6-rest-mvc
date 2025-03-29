@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -35,8 +36,8 @@ public class BeerController {
     }
 
     @PostMapping(BEER_PATH)
-    public ResponseEntity<BeerDTO> handlePost(@RequestBody BeerDTO beer){
-        log.debug("Handle post beer: {}", beer);
+    public ResponseEntity<BeerDTO> createNewBeer(@RequestBody BeerDTO beer){
+        log.debug("createNewBeer controller: {}", beer);
         BeerDTO saveNewBeer = beerService.createNewBeer(beer);
 
         HttpHeaders headers = new HttpHeaders();
@@ -49,7 +50,9 @@ public class BeerController {
     public ResponseEntity<HttpStatus> updateByID(@PathVariable("beerId") UUID beerId, @RequestBody BeerDTO beer){
         log.debug("Update beer by id in controller: {}", beerId);
 
-        beerService.updateBeerByID(beerId, beer);
+       if(beerService.updateBeerByID(beerId, beer).isEmpty()){
+           throw new NotFoundException();
+       }
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

@@ -6,6 +6,8 @@ import com.anuworks.spring6restmvc.repo.CustomerRepo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,5 +53,20 @@ class CustomerControllerIntTest {
     @Test
     void testGetByIdNotFound() {
         assertThrows(NotFoundException.class, ()-> customerController.getCustomerById(UUID.randomUUID()));
+    }
+
+    @Rollback
+    @Transactional
+    @Test
+    void testSaveNewCustomer() {
+        CustomerDTO customerDTO = CustomerDTO.builder().customerName("new customer").build();
+        ResponseEntity<CustomerDTO> customer = customerController.createCustomer(customerDTO);
+
+        assertThat(customer.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(201));
+        assertThat(customer.getHeaders().getLocation().toString()).isNotEmpty();
+
+        String location = customer.getHeaders().getLocation().toString();
+        assertThat(location).isNotNull();
+        assertThat(location).isEqualTo(customer.getHeaders().getLocation().toString());
     }
 }

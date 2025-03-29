@@ -8,9 +8,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Created by Anudeep Madrampalli (Anuworks)
@@ -42,12 +44,26 @@ public class BeerServiceJPA implements BeerService {
 
     @Override
     public BeerDTO createNewBeer(BeerDTO beer) {
-        return null;
+        log.debug("createNewBeer service JPA: {}", beer);
+        return beerMapper.beerToBeerDTO(beerRepo.save(beerMapper.beerDtoToBeer(beer)));
     }
 
     @Override
-    public void updateBeerByID(UUID beerId, BeerDTO beer) {
+    public Optional<BeerDTO> updateBeerByID(UUID beerId, BeerDTO beer) {
+        AtomicReference<Optional<BeerDTO>> existingBeer = new AtomicReference<>();
 
+        beerRepo.findById(beerId).ifPresentOrElse(foundBeer -> {
+            foundBeer.setBeerName(beer.getBeerName());
+            foundBeer.setBeerStyle(beer.getBeerStyle());
+            foundBeer.setPrice(beer.getPrice());
+            foundBeer.setLastUpdatedDate(LocalDateTime.now());
+            foundBeer.setQuantityOnHand(beer.getQuantityOnHand());
+            existingBeer.set(Optional.of(beerMapper.beerToBeerDTO(beerRepo.save(foundBeer))));
+
+        }, () -> {
+            existingBeer.set(Optional.empty());
+        });
+        return existingBeer.get();
     }
 
     @Override
