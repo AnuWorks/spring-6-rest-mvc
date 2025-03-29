@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 /**
  * Created by Anudeep Madrampalli (Anuworks)
  **/
-@ControllerAdvice
+//@ControllerAdvice
 public class ExceptionController {
 
     @ExceptionHandler(NotFoundException.class)
