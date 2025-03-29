@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +20,7 @@ import java.util.UUID;
 public class BeerController {
     private final BeerService beerService;
 
-    @RequestMapping(value = "/{beerId}", method = RequestMethod.GET)
+    @GetMapping(value = "/{beerId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Beer getBeerById(@PathVariable("beerId") String beerId) {
         log.debug("Get beer by id in controller: {}", beerId);
         UUID id = UUID.fromString(beerId);
