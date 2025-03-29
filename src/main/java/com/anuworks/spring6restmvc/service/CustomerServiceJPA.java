@@ -66,12 +66,23 @@ public class CustomerServiceJPA implements CustomerService {
     }
 
     @Override
-    public void deleteCustomerByID(UUID customerId) {
-
+    public Boolean deleteCustomerByID(UUID customerId) {
+        if(customerRepo.findById(customerId).isPresent()){
+            customerRepo.deleteById(customerId);
+            return true;
+        }
+        return false;
     }
 
     @Override
-    public CustomerDTO patchCustomerById(UUID customerId, CustomerDTO customer) {
-        return null;
+    public Optional<CustomerDTO> patchCustomerById(UUID customerId, CustomerDTO customer) {
+        AtomicReference<Optional<CustomerDTO>> customerRef = new AtomicReference<>();
+        customerRepo.findById(customerId).ifPresentOrElse(foundCustomer -> {
+            foundCustomer.setCustomerName(customer.getCustomerName());
+            customerRepo.save(foundCustomer);
+            customerRef.set(Optional.of(customerMapper.customerToCustomerDTO(foundCustomer)));
+        },
+                ()->{customerRef.set(Optional.empty());});
+    return customerRef.get();
     }
 }

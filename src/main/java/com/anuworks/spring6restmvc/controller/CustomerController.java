@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -61,7 +62,9 @@ public class CustomerController {
     public ResponseEntity<CustomerDTO> deleteCustomer(@PathVariable("customerId") UUID customerId) {
         log.info("CustomerController deleteCustomer...");
 
-        customerService.deleteCustomerByID(customerId);
+        if(!customerService.deleteCustomerByID(customerId)){
+            throw new NotFoundException();
+        }
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -69,8 +72,11 @@ public class CustomerController {
     @PatchMapping(CUSTOMER_PATH_ID)
     public ResponseEntity<CustomerDTO> patchCustomerById(@PathVariable("customerId") UUID customerId, @RequestBody CustomerDTO customer) {
         log.info("CustomerController patchCustomerById...");
-        CustomerDTO updatedCustomer = customerService.patchCustomerById(customerId, customer);
-        return new ResponseEntity<>(updatedCustomer, HttpStatus.NO_CONTENT);
+        Optional<CustomerDTO> updatedCustomer = customerService.patchCustomerById(customerId, customer);
+        if(updatedCustomer.isEmpty()){
+            throw new NotFoundException();
+        }
+        return new ResponseEntity<>(updatedCustomer.get(), HttpStatus.NO_CONTENT);
     }
 
 

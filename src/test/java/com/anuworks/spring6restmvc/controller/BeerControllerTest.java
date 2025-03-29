@@ -60,6 +60,8 @@ class BeerControllerTest {
         BeerDTO beer = beerServiceImpl.getListOfBeers().getFirst();
         beer.setBeerName("Hello Beer");
 
+        given(beerService.patchBeerByID(any(UUID.class), any(BeerDTO.class))).willReturn(Optional.of(beer));
+
         mockMvc.perform(patch(BEER_PATH_ID, beer.getId())
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -150,7 +152,6 @@ class BeerControllerTest {
         mockMvc.perform(get("/api/v1/beer").accept(MediaType.APPLICATION_JSON))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.length()", is(3)));
-
 
     }
 

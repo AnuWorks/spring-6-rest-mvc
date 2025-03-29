@@ -114,29 +114,34 @@ public class BeerServiceImpl implements BeerService {
     }
 
     @Override
-    public BeerDTO patchBeerByID(UUID beerId, BeerDTO beer) {
+    public Optional<BeerDTO> patchBeerByID(UUID beerId, BeerDTO beer) {
         log.debug("Patch beer by id in service: {}", beerId);
 
         BeerDTO existing = beerMap.get(beerId);
-        // Check and update
-        if(StringUtils.hasText(beer.getBeerName())) {
-            existing.setBeerName(beer.getBeerName());
+        if(existing != null) {
+            // Check and update
+            if(StringUtils.hasText(beer.getBeerName())) {
+                existing.setBeerName(beer.getBeerName());
+            }
+            if(StringUtils.hasText(beer.getUpc())) {
+                existing.setUpc(beer.getUpc());
+            }
+            if (beer.getPrice() != null) {
+                existing.setPrice(beer.getPrice());
+            }
+            if(beer.getQuantityOnHand() != null) {
+                existing.setQuantityOnHand(beer.getQuantityOnHand());
+            }
+            if (beer.getBeerStyle() != null) {
+                existing.setBeerStyle(beer.getBeerStyle());
+            }
+            existing.setLastUpdatedDate(LocalDateTime.now());
+            beerMap.put(beerId, existing);
+            return Optional.of(existing);
+        }else {
+            return Optional.empty();
         }
-        if(StringUtils.hasText(beer.getUpc())) {
-            existing.setUpc(beer.getUpc());
-        }
-        if (beer.getPrice() != null) {
-            existing.setPrice(beer.getPrice());
-        }
-        if(beer.getQuantityOnHand() != null) {
-            existing.setQuantityOnHand(beer.getQuantityOnHand());
-        }
-        if (beer.getBeerStyle() != null) {
-            existing.setBeerStyle(beer.getBeerStyle());
-        }
-        existing.setLastUpdatedDate(LocalDateTime.now());
-        beerMap.put(beerId, existing);
-        return existing;
+
 
     }
 }
