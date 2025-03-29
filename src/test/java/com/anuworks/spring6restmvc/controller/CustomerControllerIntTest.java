@@ -1,11 +1,14 @@
 package com.anuworks.spring6restmvc.controller;
 
 import com.anuworks.spring6restmvc.entities.Customer;
+import com.anuworks.spring6restmvc.mappers.CustomerMapper;
 import com.anuworks.spring6restmvc.model.CustomerDTO;
 import com.anuworks.spring6restmvc.repo.CustomerRepo;
+import org.assertj.core.condition.Not;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
@@ -25,6 +28,9 @@ class CustomerControllerIntTest {
 
     @Autowired
     CustomerRepo customerRepo;
+
+    @Autowired
+    CustomerMapper customerMapper;
 
 
     @Test
@@ -68,5 +74,21 @@ class CustomerControllerIntTest {
         String location = customer.getHeaders().getLocation().toString();
         assertThat(location).isNotNull();
         assertThat(location).isEqualTo(customer.getHeaders().getLocation().toString());
+    }
+
+    @Test
+    void testUpdateCustomer() {
+        Customer existingCustomer = customerRepo.findAll().get(0);
+        existingCustomer.setCustomerName("updated customer");
+        CustomerDTO customerDTO = customerMapper.customerToCustomerDTO(existingCustomer);
+
+        ResponseEntity<HttpStatus> response = customerController.updateCustomer(existingCustomer.getId(), customerDTO);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
+
+    }
+
+    @Test
+    void testUpdateCustomerNotFound() {
+        assertThrows(NotFoundException.class, ()-> customerController.updateCustomer(UUID.randomUUID(), null));
     }
 }
