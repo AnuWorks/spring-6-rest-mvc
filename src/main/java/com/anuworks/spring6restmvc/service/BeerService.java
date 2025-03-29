@@ -2,14 +2,16 @@ package com.anuworks.spring6restmvc.service;
 
 import com.anuworks.spring6restmvc.model.Beer;
 
+import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface BeerService {
 
     List<Beer> getListOfBeers();
 
-    Beer getBeerById(UUID id);
+    Optional<Beer> getBeerById(UUID id);
 
     Beer createNewBeer(Beer beer);
 

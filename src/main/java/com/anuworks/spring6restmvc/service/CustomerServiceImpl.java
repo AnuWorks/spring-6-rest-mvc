@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -52,9 +53,9 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Customer getCustomerById(UUID customerId) {
+    public Optional<Customer> getCustomerById(UUID customerId) {
         log.info("CustomerServiceImpl getCustomerById... {}", customerId);
-        return customerMap.get(customerId);
+        return Optional.of(customerMap.get(customerId));
     }
 
     @Override
