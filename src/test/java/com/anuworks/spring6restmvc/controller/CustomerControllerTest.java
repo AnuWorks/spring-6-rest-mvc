@@ -1,6 +1,6 @@
 package com.anuworks.spring6restmvc.controller;
 
-import com.anuworks.spring6restmvc.model.Customer;
+import com.anuworks.spring6restmvc.model.CustomerDTO;
 import com.anuworks.spring6restmvc.service.CustomerService;
 import com.anuworks.spring6restmvc.service.CustomerServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -43,7 +43,7 @@ class CustomerControllerTest {
     private ObjectMapper objectMapper;
 
     @Captor
-    private ArgumentCaptor<Customer> customerArgumentCaptor;
+    private ArgumentCaptor<CustomerDTO> customerArgumentCaptor;
 
     @Captor
     private ArgumentCaptor<UUID> uuidArgumentCaptor;
@@ -58,8 +58,10 @@ class CustomerControllerTest {
 
     @Test
     void testPatchCustomer() throws Exception {
-        Customer customer = customerServiceImpl.getListOfCustomers().getFirst();
+        CustomerDTO customer = customerServiceImpl.getListOfCustomers().getFirst();
         customer.setCustomerName("This is for test patch");
+
+        given(customerService.patchCustomerById(any(UUID.class), any(CustomerDTO.class))).willReturn(Optional.of(customer));
 
         mockMvc.perform(patch(CUSTOMER_PATH_ID, customer.getId())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -75,7 +77,9 @@ class CustomerControllerTest {
 
     @Test
     void testDeleteCustomer() throws Exception {
-        Customer customer = customerServiceImpl.getListOfCustomers().getFirst();
+        CustomerDTO customer = customerServiceImpl.getListOfCustomers().getFirst();
+
+        given(customerService.deleteCustomerByID(any(UUID.class))).willReturn(true);
 
         mockMvc.perform(delete(CUSTOMER_PATH_ID, customer.getId()))
                 .andExpect(status().isNoContent());
@@ -88,28 +92,29 @@ class CustomerControllerTest {
 
     @Test
     void testUpdateCustomer() throws Exception {
-        Customer customer = customerServiceImpl.getListOfCustomers().getFirst();
+        CustomerDTO customer = customerServiceImpl.getListOfCustomers().getFirst();
 
+        given(customerService.updateCustomer(any(UUID.class), any(CustomerDTO.class))).willReturn(Optional.of(customer));
         mockMvc.perform(put(CUSTOMER_PATH_ID, customer.getId())
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(customer)))
                 .andExpect(status().isNoContent());
 
-        verify(customerService).updateCustomer(any(UUID.class), any(Customer.class));
+        verify(customerService).updateCustomer(any(UUID.class), any(CustomerDTO.class));
     }
 
 
     @Test
     void testCreateCustomer() throws Exception {
 
-        Customer newCustomer = customerServiceImpl.getListOfCustomers().getFirst();
+        CustomerDTO newCustomer = customerServiceImpl.getListOfCustomers().getFirst();
 
-        given(customerService.createACustomer(any(Customer.class))).willReturn(newCustomer);
+        given(customerService.createACustomer(any(CustomerDTO.class))).willReturn(newCustomer);
 
         mockMvc.perform(post(CUSTOMER_PATH)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(Customer.builder().customerName("Anudeep").build())))
+                .content(objectMapper.writeValueAsString(CustomerDTO.builder().customerName("Anudeep").build())))
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("Location"));
 
@@ -119,7 +124,7 @@ class CustomerControllerTest {
     @Test
     void getCustomerById() throws Exception {
 
-        Customer testCustomer = customerServiceImpl.getListOfCustomers().getFirst();
+        CustomerDTO testCustomer = customerServiceImpl.getListOfCustomers().getFirst();
 
         given(customerService.getCustomerById(testCustomer.getId())).willReturn(Optional.of(testCustomer));
 
@@ -139,7 +144,7 @@ class CustomerControllerTest {
 
     @Test
     void getCustomerList() throws Exception {
-        List<Customer> testCustomers = customerServiceImpl.getListOfCustomers();
+        List<CustomerDTO> testCustomers = customerServiceImpl.getListOfCustomers();
 
         given(customerService.getListOfCustomers()).willReturn(testCustomers);
 
