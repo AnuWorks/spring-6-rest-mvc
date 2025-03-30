@@ -2,11 +2,13 @@ package com.anuworks.spring6restmvc.controller;
 
 import com.anuworks.spring6restmvc.model.BeerDTO;
 import com.anuworks.spring6restmvc.service.BeerService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,7 +38,7 @@ public class BeerController {
     }
 
     @PostMapping(BEER_PATH)
-    public ResponseEntity<BeerDTO> createNewBeer(@RequestBody BeerDTO beer){
+    public ResponseEntity<BeerDTO> createNewBeer(@Validated @RequestBody BeerDTO beer){
         log.debug("createNewBeer controller: {}", beer);
         BeerDTO saveNewBeer = beerService.createNewBeer(beer);
 
@@ -47,7 +49,7 @@ public class BeerController {
     }
 
     @PutMapping(BEER_PATH_ID)
-    public ResponseEntity<HttpStatus> updateByID(@PathVariable("beerId") UUID beerId, @RequestBody BeerDTO beer){
+    public ResponseEntity<HttpStatus> updateByID(@PathVariable("beerId") UUID beerId, @Validated @RequestBody BeerDTO beer){
         log.debug("Update beer by id in controller: {}", beerId);
 
        if(beerService.updateBeerByID(beerId, beer).isEmpty()){

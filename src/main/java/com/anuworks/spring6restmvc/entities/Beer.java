@@ -3,9 +3,13 @@ package com.anuworks.spring6restmvc.entities;
 import com.anuworks.spring6restmvc.model.BeerStyle;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UuidGenerator;
+import org.hibernate.validator.constraints.Length;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -30,9 +34,21 @@ public class Beer {
 
     @Version
     private Integer version;
+
+    @NotBlank
+    @NotNull
+    @Size(min = 2, max = 50)
     private String beerName;
+
+    @NotNull
     private BeerStyle beerStyle;
+
+    @NotNull
+    @NotBlank
+    @Size(max = 255)
     private String upc;
+
+    @NotNull
     private BigDecimal price;
     private Integer quantityOnHand;
     private LocalDateTime createdDate;

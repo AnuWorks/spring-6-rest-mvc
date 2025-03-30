@@ -1,6 +1,9 @@
 package com.anuworks.spring6restmvc.controller;
 
+import com.anuworks.spring6restmvc.entities.Beer;
 import com.anuworks.spring6restmvc.model.BeerDTO;
+import com.anuworks.spring6restmvc.model.BeerStyle;
+import com.anuworks.spring6restmvc.repo.BeerRepo;
 import com.anuworks.spring6restmvc.service.BeerService;
 import com.anuworks.spring6restmvc.service.BeerServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,6 +16,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 
 import java.util.Optional;
@@ -154,5 +160,39 @@ class BeerControllerTest {
                 .andExpect(jsonPath("$.length()", is(3)));
 
     }
+
+    // Validation testcases
+
+
+    @Test
+    void testCreateBeerEmptyObject() throws Exception {
+        Beer beer = Beer.builder().build();
+
+        ResultActions resultHandlers =  mockMvc.perform(post(BEER_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(beer))
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.length()", is(6)));
+
+        System.out.println(resultHandlers.andReturn().getResponse().getContentAsString());
+
+    }
+
+    @Test
+    void testEmptyUpdateBeer() throws Exception {
+        BeerDTO beer = beerServiceImpl.getListOfBeers().getFirst();
+        BeerDTO emptyBeer = BeerDTO.builder().beerName("Test only beer").beerStyle(BeerStyle.GINGER_BEER).build();
+
+       ResultActions resultActions =  mockMvc.perform(put(BEER_PATH_ID, beer.getId(), emptyBeer)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(emptyBeer)))
+                .andExpect(status().isBadRequest());
+
+        System.out.println(resultActions.andReturn().getResponse().getContentAsString());
+
+    }
+
 
 }
