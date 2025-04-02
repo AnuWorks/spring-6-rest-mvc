@@ -3,7 +3,6 @@ package com.anuworks.spring6restmvc.controller;
 import com.anuworks.spring6restmvc.entities.Beer;
 import com.anuworks.spring6restmvc.model.BeerDTO;
 import com.anuworks.spring6restmvc.model.BeerStyle;
-import com.anuworks.spring6restmvc.repo.BeerRepo;
 import com.anuworks.spring6restmvc.service.BeerService;
 import com.anuworks.spring6restmvc.service.BeerServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,8 +16,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 
 import java.util.Optional;
