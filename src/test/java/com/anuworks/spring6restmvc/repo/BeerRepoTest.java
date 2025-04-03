@@ -17,13 +17,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 @DataJpaTest
-@ActiveProfiles("mysql")
 class BeerRepoTest {
 
     @Autowired
     BeerRepo beerRepo;
 
-
+    @Test
     @Transactional
     @Rollback
     void testSaveBeer(){

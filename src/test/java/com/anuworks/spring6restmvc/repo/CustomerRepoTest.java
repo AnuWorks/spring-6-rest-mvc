@@ -12,14 +12,13 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-@ActiveProfiles("mysql")
 class CustomerRepoTest {
 
     @Autowired
     CustomerRepo customerRepo;
 
 
-
+    @Test
     @Transactional
     @Rollback
     void testSaveCustomer() {
