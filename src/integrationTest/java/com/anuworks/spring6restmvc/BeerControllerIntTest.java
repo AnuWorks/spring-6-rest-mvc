@@ -1,11 +1,14 @@
-package com.anuworks.spring6restmvc.controller;
+package com.anuworks.spring6restmvc;
 
+import com.anuworks.spring6restmvc.controller.BeerController;
+import com.anuworks.spring6restmvc.controller.NotFoundException;
 import com.anuworks.spring6restmvc.entities.Beer;
 import com.anuworks.spring6restmvc.mappers.BeerMapper;
 import com.anuworks.spring6restmvc.model.BeerDTO;
 import com.anuworks.spring6restmvc.repo.BeerRepo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,7 +32,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
+@Tag("integration")
 class BeerControllerIntTest {
+
     @Autowired
     BeerController beerController;
 

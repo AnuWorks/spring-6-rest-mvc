@@ -1,10 +1,11 @@
-package com.anuworks.spring6restmvc.controller;
+package com.anuworks.spring6restmvc;
 
+import com.anuworks.spring6restmvc.controller.CustomerController;
+import com.anuworks.spring6restmvc.controller.NotFoundException;
 import com.anuworks.spring6restmvc.entities.Customer;
 import com.anuworks.spring6restmvc.mappers.CustomerMapper;
 import com.anuworks.spring6restmvc.model.CustomerDTO;
 import com.anuworks.spring6restmvc.repo.CustomerRepo;
-import org.assertj.core.condition.Not;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
