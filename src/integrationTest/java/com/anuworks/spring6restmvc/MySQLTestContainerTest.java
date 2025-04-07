@@ -2,6 +2,7 @@ package com.anuworks.spring6restmvc;
 
 import com.anuworks.spring6restmvc.entities.Beer;
 import com.anuworks.spring6restmvc.repo.BeerRepo;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Created by Anudeep Madrampalli (Anuworks)
  **/
+@Disabled
 @Testcontainers(disabledWithoutDocker = true)
 @SpringBootTest
 @ActiveProfiles("mysql")

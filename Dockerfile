@@ -1,13 +1,25 @@
-FROM openjdk:23-jdk-slim AS build
-VOLUME /tmp
-ARG JAVA_OPTS
-ENV JAVA_OPTS=$JAVA_OPTS
-COPY build/libs/spring-6-rest-mvc-0.0.1-SNAPSHOT.jar spring6restmvc.jar
+# Stage 1: Build the application
+FROM gradle:jdk21-alpine AS build
 
-# stage 2
+WORKDIR /app
+
+# Copy Gradle wrapper and project files first to optimize build caching
+#COPY gradlew .
+#COPY gradle gradle
+#COPY build.gradle settings.gradle ./
+COPY . .
+
+# Build the app (skip tests)
+RUN ./gradlew clean build
+
+
+
+# Stage 2: Create minimal runtime image
 FROM gcr.io/distroless/java21-debian12
-COPY --from=build spring6restmvc.jar spring6restmvc.jar
+
+COPY --from=build /app/build/libs/spring-6-rest-mvc-0.0.1-SNAPSHOT.jar app.jar
+#COPY --from=build /app/compose.yaml .
+
 EXPOSE 8080
-ENTRYPOINT exec java $JAVA_OPTS -jar spring6restmvc.jar
-# For Spring-Boot project, use the entrypoint below to reduce Tomcat startup time.
-#ENTRYPOINT exec java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar spring6restmvc.jar
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
