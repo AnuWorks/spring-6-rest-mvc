@@ -29,7 +29,7 @@ class BeerRepoTest {
         assertThrows(ConstraintViolationException.class, () -> {
             Beer beer = beerRepo.save(Beer.builder()
                     .beerName("My BeereeeeeeeeeeeeeeeeeeeeeeMy BeereeeeeeeeeeeeeeeeeeeeeeMy BeereeeeeeeeeeeeeeeeeeeeeeMy BeereeeeeeeeeeeeeeeeeeeeeeMy BeereeeeeeeeeeeeeeeeeeeeeeMy BeereeeeeeeeeeeeeeeeeeeeeeMy BeereeeeeeeeeeeeeeeeeeeeeeMy BeereeeeeeeeeeeeeeeeeeeeeeMy Beereeeeeeeeeeeeeeeeeeeeee")
-                    .beerStyle(BeerStyle.GINGER_BEER)
+                    .beerStyle(BeerStyle.LAGER)
                     .price(new BigDecimal("25.89"))
                     .upc("114455")
                     .build());

@@ -179,7 +179,7 @@ class BeerControllerTest {
     @Test
     void testEmptyUpdateBeer() throws Exception {
         BeerDTO beer = beerServiceImpl.getListOfBeers().getFirst();
-        BeerDTO emptyBeer = BeerDTO.builder().beerName("Test only beer").beerStyle(BeerStyle.GINGER_BEER).build();
+        BeerDTO emptyBeer = BeerDTO.builder().beerName("Test only beer").beerStyle(BeerStyle.PILSNER).build();
 
        ResultActions resultActions =  mockMvc.perform(put(BEER_PATH_ID, beer.getId(), emptyBeer)
                 .accept(MediaType.APPLICATION_JSON)

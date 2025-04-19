@@ -43,7 +43,7 @@ public class MySQLTestContainerTest {
     @Test
     void testListBeer() {
         List<Beer> beerList = beerRepo.findAll();
-        assertThat(beerList.size()).isEqualTo(3);
+        assertThat(beerList.size()).isEqualTo(2413);
     }
 
 }
