@@ -1,22 +1,26 @@
 package com.anuworks.spring6restmvc.repo;
 
+import com.anuworks.spring6restmvc.bootstrap.BootstrapData;
 import com.anuworks.spring6restmvc.entities.Beer;
 import com.anuworks.spring6restmvc.model.BeerStyle;
+import com.anuworks.spring6restmvc.service.BeerCSVServiceImpl;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 @DataJpaTest
+@Import({BootstrapData.class, BeerCSVServiceImpl.class})
 class BeerRepoTest {
 
     @Autowired
@@ -42,5 +46,11 @@ class BeerRepoTest {
 
     }
 
+    @Test
+    void testFindByBeerNameIsLikeIgnoreCase() {
+        List<Beer> beerDTOList = beerRepo.findByBeerNameIsLikeIgnoreCase("Grandma's Pecan");
+        assertThat(beerDTOList).isNotNull();
+        assertThat(beerDTOList.size()).isEqualTo(1);
 
+    }
 }
