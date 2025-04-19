@@ -29,7 +29,10 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.hamcrest.Matchers.is;
 
 @SpringBootTest
 @Tag("integration")
@@ -59,7 +62,7 @@ class BeerControllerIntTest {
 
     @Test
     void testListBeers() {
-        List<BeerDTO> dtos = beerController.getAllBeers();
+        List<BeerDTO> dtos = beerController.getAllBeers(null, null, false);
         assertThat(dtos.size()).isEqualTo(2413);
     }
 
@@ -68,7 +71,7 @@ class BeerControllerIntTest {
     @Test
     void testEmptyList() {
         beerRepo.deleteAll();
-        List<BeerDTO> dtos = beerController.getAllBeers();
+        List<BeerDTO> dtos = beerController.getAllBeers(null, null, false);
         assertThat(dtos.size()).isEqualTo(0);
     }
 
@@ -175,5 +178,13 @@ class BeerControllerIntTest {
                 .andExpect(status().isBadRequest());
 
 
+    }
+
+    @Test
+    void testListOfBeerByName() throws Exception {
+        mockMvc.perform(get("/api/v1/beer")
+                .queryParam("beerName", "%IPA%"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()", is(336)));
     }
 }

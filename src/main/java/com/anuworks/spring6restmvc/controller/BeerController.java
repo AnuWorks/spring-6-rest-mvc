@@ -1,8 +1,8 @@
 package com.anuworks.spring6restmvc.controller;
 
 import com.anuworks.spring6restmvc.model.BeerDTO;
+import com.anuworks.spring6restmvc.model.BeerStyle;
 import com.anuworks.spring6restmvc.service.BeerService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -32,9 +32,11 @@ public class BeerController {
     }
 
     @GetMapping(BEER_PATH)
-    public List<BeerDTO> getAllBeers() {
+    public List<BeerDTO> getAllBeers(@RequestParam(required = false, name = "beerName") String beerName,
+                                     @RequestParam(required = false, name = "beerStyle") BeerStyle beerStyle,
+                                     @RequestParam(required = false, name = "showInventory") Boolean showInventory) {
         log.debug("Get all beers");
-        return beerService.getListOfBeers();
+        return beerService.getListOfBeers(beerName, beerStyle, showInventory);
     }
 
     @PostMapping(BEER_PATH)
