@@ -5,13 +5,16 @@ import com.anuworks.spring6restmvc.controller.NotFoundException;
 import com.anuworks.spring6restmvc.entities.Beer;
 import com.anuworks.spring6restmvc.mappers.BeerMapper;
 import com.anuworks.spring6restmvc.model.BeerDTO;
+import com.anuworks.spring6restmvc.model.BeerStyle;
 import com.anuworks.spring6restmvc.repo.BeerRepo;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.core.IsNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
@@ -28,8 +31,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.hamcrest.Matchers.is;
@@ -62,8 +64,8 @@ class BeerControllerIntTest {
 
     @Test
     void testListBeers() {
-        List<BeerDTO> dtos = beerController.getAllBeers(null, null, false);
-        assertThat(dtos.size()).isEqualTo(2413);
+        Page<BeerDTO> dtos = beerController.getAllBeers(null, null, false, 1, 25);
+        assertThat(dtos.getTotalElements()).isEqualTo(2413);
     }
 
     @Rollback
@@ -71,8 +73,8 @@ class BeerControllerIntTest {
     @Test
     void testEmptyList() {
         beerRepo.deleteAll();
-        List<BeerDTO> dtos = beerController.getAllBeers(null, null, false);
-        assertThat(dtos.size()).isEqualTo(0);
+        Page<BeerDTO> dtos = beerController.getAllBeers(null, null, false, 1, 25);
+        assertThat(dtos.getTotalElements()).isEqualTo(0);
     }
 
     @Test
@@ -185,6 +187,24 @@ class BeerControllerIntTest {
         mockMvc.perform(get("/api/v1/beer")
                 .queryParam("beerName", "%IPA%"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()", is(336)));
+                .andExpect(jsonPath("$.content.length()", is(336)));
+    }
+
+    @Test
+    void testListOfBeersWithPagination() throws Exception {
+
+        mockMvc.perform(get("/api/v1/beer")
+                .queryParam("beerName", "%IPA")
+                .queryParam("beerStyle", BeerStyle.IPA.name())
+                .queryParam("showInventory", "true")
+                .queryParam("pageNumber", "2")
+                .queryParam("pageSize", "10")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content.length()", is(291)))
+                .andExpect(jsonPath("$.content.[0].quantityOnHand").value(IsNull.notNullValue()));
+
+
     }
 }

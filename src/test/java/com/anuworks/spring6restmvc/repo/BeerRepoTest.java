@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,9 +49,9 @@ class BeerRepoTest {
 
     @Test
     void testFindByBeerNameIsLikeIgnoreCase() {
-        List<Beer> beerDTOList = beerRepo.findByBeerNameIsLikeIgnoreCase("Grandma's Pecan");
+        Page<Beer> beerDTOList = beerRepo.findByBeerNameIsLikeIgnoreCase("Grandma's Pecan", null);
         assertThat(beerDTOList).isNotNull();
-        assertThat(beerDTOList.size()).isEqualTo(1);
+        assertThat(beerDTOList.getTotalElements()).isEqualTo(1);
 
     }
 }

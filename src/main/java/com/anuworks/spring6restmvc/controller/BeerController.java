@@ -5,13 +5,13 @@ import com.anuworks.spring6restmvc.model.BeerStyle;
 import com.anuworks.spring6restmvc.service.BeerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -32,11 +32,13 @@ public class BeerController {
     }
 
     @GetMapping(BEER_PATH)
-    public List<BeerDTO> getAllBeers(@RequestParam(required = false, name = "beerName") String beerName,
-                                     @RequestParam(required = false, name = "beerStyle") BeerStyle beerStyle,
-                                     @RequestParam(required = false, name = "showInventory") Boolean showInventory) {
-        log.debug("Get all beers");
-        return beerService.getListOfBeers(beerName, beerStyle, showInventory);
+    public Page<BeerDTO> getAllBeers(@RequestParam(required = false) String beerName,
+                                     @RequestParam(required = false) BeerStyle beerStyle,
+                                     @RequestParam(required = false) Boolean showInventory,
+                                     @RequestParam(required = false) Integer pageNumber,
+                                     @RequestParam(required = false) Integer pageSize) {
+        log.debug("Get all beers {}, {}, {},{},{}", beerName, beerStyle, showInventory, pageNumber, pageSize);
+        return beerService.getListOfBeers(beerName, beerStyle, showInventory, pageNumber, pageSize);
     }
 
     @PostMapping(BEER_PATH)
