@@ -35,6 +35,7 @@ class CustomerControllerIntTest {
 
 
     @Test
+    @Transactional
     void testGetListOfCustomers() {
         List<CustomerDTO> customers = customerController.getListOfCustomer();
         assertThat(customers.size()).isEqualTo(3);
@@ -51,6 +52,7 @@ class CustomerControllerIntTest {
     }
 
     @Test
+    @Transactional
     void testGetByID() {
         Customer customer = customerRepo.findAll().getFirst();
         CustomerDTO customerDTO = customerController.getCustomerById(customer.getId());

@@ -25,7 +25,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -171,14 +170,13 @@ class BeerControllerIntTest {
     @Test
     void testPatchBeerNameValidation() throws Exception {
         Beer beer = beerRepo.findAll().get(0);
-        beer.setBeerName("UpdatedUpdatedUpdatedUpdatedUpdatedUpdatedUpdatedUpdatedUpdatedUpdatedUpdatedUpdatedUpdatedUpdatedUpdatedUpdatedUpdatedUpdatedUpdatedUpdated");
+        beer.setBeerName("abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghij");
 
         mockMvc.perform(patch("/api/v1/beer/{beerId}", beer.getId())
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(beer)))
-                .andExpect(status().isBadRequest());
-
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(beer)))
+                        .andExpect(status().isBadRequest());
 
     }
 

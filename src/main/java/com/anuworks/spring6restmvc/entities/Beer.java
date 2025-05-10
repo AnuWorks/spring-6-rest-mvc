@@ -1,6 +1,7 @@
 package com.anuworks.spring6restmvc.entities;
 
 import com.anuworks.spring6restmvc.model.BeerStyle;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -67,6 +68,7 @@ public class Beer {
     @ManyToMany
     @JoinTable(name = "beer_category", joinColumns = @JoinColumn(name = "beer_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id"))
+    @JsonIgnore
     private Set<Category> categories = new HashSet<>();
 
     public void addCategory(Category category) {
