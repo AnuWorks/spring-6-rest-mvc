@@ -12,14 +12,14 @@ import org.hibernate.type.SqlTypes;
 import java.sql.Timestamp;
 import java.util.UUID;
 
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Builder
-public class BeerOrderLine {
-
+public class BeerOrderShipment {
     @Id
     @GeneratedValue(generator = "UUID")
     @UuidGenerator
@@ -30,25 +30,20 @@ public class BeerOrderLine {
     @Version
     private Long version;
 
+    @OneToOne
+    private BeerOrder beerOrder;
+
+    private String trackingNumber;
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
     @CreationTimestamp
     @Column(updatable = false)
     private Timestamp createdDate;
 
     @UpdateTimestamp
     private Timestamp lastModifiedDate;
-
-    public boolean isNew() {
-        return this.id == null;
-    }
-
-    @Builder.Default
-    private Integer orderQuantity = 0;
-    @Builder.Default
-    private Integer quantityAllocated = 0;
-
-    @ManyToOne
-    private BeerOrder beerOrder;
-
-    @ManyToOne
-    private Beer beer;
 }

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,9 +27,13 @@ class CategoryRepoTest {
     }
 
     @Test
+    @Transactional
     void testCategoryRepo() {
-        Category category = Category.builder().description("Ales").build();
-        Category savedCategory = categoryRepo.save(category);
+        Category savedCategory = categoryRepo.save(Category.builder().description("Ales").build());
+        testBeer.addCategory(savedCategory);
+
+        Beer savedBeer = beerRepo.save(testBeer);
+        System.out.println(savedBeer.getBeerName());
 
     }
 }

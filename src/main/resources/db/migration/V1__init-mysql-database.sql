@@ -3,7 +3,7 @@
 
 
     create table beer (
-        beer_style tinyint not null check (beer_style between 0 and 2),
+        beer_style smallint not null,
         price decimal(38,2) not null,
         quantity_on_hand integer,
         version integer,

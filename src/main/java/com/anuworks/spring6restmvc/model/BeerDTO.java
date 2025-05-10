@@ -36,4 +36,6 @@ public class BeerDTO {
     private LocalDateTime createdDate;
     private LocalDateTime lastUpdatedDate;
 
+
+
 }
