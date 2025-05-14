@@ -127,6 +127,7 @@ public class BeerServiceJPA implements BeerService {
             foundBeer.setPrice(beer.getPrice());
             foundBeer.setLastUpdatedDate(LocalDateTime.now());
             foundBeer.setQuantityOnHand(beer.getQuantityOnHand());
+            foundBeer.setVersion(beer.getVersion());
             existingBeer.set(Optional.of(beerMapper.beerToBeerDTO(beerRepo.save(foundBeer))));
 
         }, () -> {
